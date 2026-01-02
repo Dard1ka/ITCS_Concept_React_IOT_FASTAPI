@@ -1,0 +1,6 @@
+# back-end
+*.pem
+__pycache__/
+.venv/
+static/output/*.jpg
+static/results/

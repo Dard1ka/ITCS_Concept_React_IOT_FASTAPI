@@ -1,35 +1,69 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Grid, GridItem, useColorModeValue } from "@chakra-ui/react";
+import NavBar from "./components/NavBar";
+import { useState, useEffect } from "react";
+import LoginPage from "./components/LoginPage";
+import RegisterPage from "./components/RegisterPage";
+import MainPage from "./components/MainPage";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [registerMode, setRegisterMode] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("loggedIn");
+    setLoggedIn(saved === "true");
+  }, []);
+
+  if (!loggedIn) {
+    if (registerMode)
+      return (
+        <RegisterPage
+          onRegistered={() => setLoggedIn(true)}
+          goLogin={() => setRegisterMode(false)}
+        />
+      );
+
+    return (
+      <LoginPage
+        onLogin={() => setLoggedIn(true)}
+        goRegister={() => setRegisterMode(true)}
+      />
+    );
+  }
+
+  const navBg = useColorModeValue("white", "#0a1b2e");
+  const navText = useColorModeValue("black", "white");
+
+  const mainBg = useColorModeValue("gray.100", "#091727ff");
+  const mainText = useColorModeValue("black", "whiteAlpha.900");
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Grid
+      minH="100vh"
+      overflowX="hidden"
+      templateAreas={`
+        "nav"
+        "main"
+      `}
+      templateColumns="1fr"
+      templateRows="auto 1fr"
+    >
+      <GridItem
+        area="nav"
+        bg={navBg}
+        color={navText}
+        display="flex"
+        alignItems="center"
+        px={4}
+      >
+        <NavBar />
+      </GridItem>
+
+      <GridItem area="main" bg={mainBg} color={mainText} p={0}>
+        <MainPage />
+      </GridItem>
+    </Grid>
+  );
 }
 
-export default App
+export default App;

@@ -78,29 +78,63 @@ const NavBar = () => {
     <Grid
       bg={bg}
       color={textColor}
-      padding="10px 14px"
-      minH="100px"
+      px={{ base: 3, sm: 4, md: "14px" }}
+      py={{ base: 3, sm: 3, md: "10px" }}
+      minH={{ base: "76px", md: "100px" }}
       w="100%"
+      maxW="100%"
+      overflowX="hidden"
       templateColumns="auto 1fr"
       templateRows="auto auto"
-      columnGap={4}
+      columnGap={{ base: 2, sm: 3, md: 4 }}
+      rowGap={{ base: 1, md: 0 }}
       alignItems="center"
     >
-      <GridItem rowSpan={2} alignSelf="center">
-        <Text fontWeight="bold" fontSize="2xl">
+      {/* LEFT: SIGMA */}
+      <GridItem rowSpan={2} alignSelf="center" minW={0}>
+        <Text
+          fontWeight="bold"
+          fontSize={{ base: "lg", sm: "xl", md: "2xl" }}
+          lineHeight="1"
+          whiteSpace="nowrap"
+        >
           SIGMA
         </Text>
       </GridItem>
 
-      <GridItem justifySelf="end">
-        <HStack spacing={4}>
-          <ColorModeSwitch />
+      {/* RIGHT TOP: switch + greeting + user */}
+      <GridItem justifySelf="end" minW={0}>
+        <HStack
+          spacing={{ base: 1.5, sm: 2.5, md: 4 }}
+          justify="flex-end"
+          align="center"
+          wrap="wrap"
+          maxW="100%"
+        >
+          {/* jangan kepotong */}
+          <Box
+            flex="0 0 auto"
+            transform={{
+              base: "scale(0.8)", // mobile
+              sm: "scale(0.85)", // tablet kecil
+              md: "scale(1)", // laptop ke atas
+            }}
+          >
+            <ColorModeSwitch />
+          </Box>
 
+          {/* Greeting: width fix supaya animasi tidak menggeser elemen lain */}
           <Box
             fontWeight="semibold"
-            fontSize="lg"
+            fontSize={{
+              base: "xs", // mobile lebih kecil
+              sm: "sm",
+              md: "lg",
+            }}
             color={accent}
-            minW="120px"
+            w={{ base: "90px", sm: "115px", md: "120px" }} // dikit lebih lebar
+            ml={{ base: 1, sm: 2, md: 0 }} // 🔥 GESER KE KANAN
+            flex="0 0 auto"
             textAlign="right"
             whiteSpace="nowrap"
             position="relative"
@@ -118,17 +152,37 @@ const NavBar = () => {
             />
           </Box>
 
-          <VStack spacing={0} align="flex-end">
-            <Text fontWeight="semibold">{user ? user.name : "Guest"}</Text>
+          {/* User: biar tidak kepotong, tapi kalau sempit akan turun baris */}
+          <VStack
+            spacing={0}
+            align="flex-end"
+            minW={0}
+            maxW={{ base: "160px", sm: "220px", md: "260px" }}
+            flex="0 1 auto"
+          >
+            <Text
+              fontWeight="semibold"
+              fontSize={{ base: "sm", sm: "sm", md: "md" }}
+              noOfLines={1}
+              maxW="100%"
+            >
+              {user ? user.name : "Guest"}
+            </Text>
 
-            <Text fontSize="sm" opacity={0.75}>
+            <Text
+              fontSize={{ base: "xs", sm: "xs", md: "sm" }}
+              opacity={0.75}
+              noOfLines={1}
+              maxW="100%"
+            >
               {user ? user.email : "-"}
             </Text>
           </VStack>
         </HStack>
       </GridItem>
 
-      <GridItem justifySelf="end">
+      {/* RIGHT BOTTOM: Logout (tetap di kanan, tidak ikut geser greeting) */}
+      <GridItem justifySelf="end" minW={0}>
         <HStack
           spacing={2}
           cursor="pointer"
@@ -139,8 +193,22 @@ const NavBar = () => {
             window.location.reload();
           }}
         >
-          <Text fontWeight="semibold">Logout</Text>
-          <MdLogout />
+          <Text
+            fontWeight="semibold"
+            fontSize={{ base: "sm", sm: "sm", md: "md" }}
+            whiteSpace="nowrap"
+          >
+            Logout
+          </Text>
+          <Box
+            as="span"
+            display="inline-flex"
+            alignItems="center"
+            fontSize={{ base: "16px", md: "18px" }}
+            lineHeight="1"
+          >
+            <MdLogout />
+          </Box>
         </HStack>
       </GridItem>
 

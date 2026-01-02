@@ -25,6 +25,7 @@ import {
   Divider,
   useColorModeValue,
   useColorMode,
+  useMediaQuery,
 } from "@chakra-ui/react";
 
 type ModelType = "yolo" | "fcos" | "rtdetr";
@@ -73,6 +74,9 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 export default function MainPage() {
   const toast = useToast();
   const { colorMode } = useColorMode();
+
+  // ✅ kunci: breakpoint khusus 629px
+  const [isNarrow] = useMediaQuery("(max-width: 628px)");
 
   const [modelType, setModelType] = useState<ModelType>("yolo");
   const [files, setFiles] = useState<
@@ -152,6 +156,7 @@ export default function MainPage() {
     }
   };
 
+  // ===== Background tetap (light/dark) =====
   const bgGradient = useColorModeValue(
     "radial-gradient(circle at top left, rgba(99,102,241,0.25) 0, transparent 55%), radial-gradient(circle at bottom right, rgba(13,148,136,0.22) 0, transparent 55%), linear-gradient(#f7fafc, #eef2ff)",
     "radial-gradient(circle at top left, #1d2345 0, transparent 55%), radial-gradient(circle at bottom right, #0f766e 0, transparent 55%), #050816"
@@ -199,14 +204,30 @@ export default function MainPage() {
     "1px dashed rgba(148, 163, 184, 0.6)"
   );
 
+  // ====== Responsive-only helpers ======
+  // ✅ kalau <629px, pad & font turun lebih agresif
+  const pagePY = { base: isNarrow ? 4 : 5, md: 8, xl: 10 };
+  const pagePX = { base: isNarrow ? 2 : 3, md: 6, xl: 8 };
+  const cardPad = { base: isNarrow ? 3 : 4, md: 5, xl: 6 };
+  const sectionGap = { base: isNarrow ? 4 : 4, md: 6 };
+  const gridGap = { base: isNarrow ? 3 : 3, md: 4 };
+  const imgH = {
+    base: isNarrow ? "180px" : "200px",
+    sm: "230px",
+    md: "260px",
+    xl: "300px",
+  };
+
   const Card = ({ children }: { children: React.ReactNode }) => (
     <Box
+      w="full"
+      maxW="100%"
       position="relative"
       bg={cardBg}
       border={cardBorder}
-      borderRadius="18px"
+      borderRadius={{ base: "16px", md: "18px" }}
       boxShadow={cardShadow}
-      p={{ base: 4, md: 5 }}
+      p={cardPad}
       overflow="hidden"
       _before={{
         content: '""',
@@ -238,12 +259,15 @@ export default function MainPage() {
       border={chipBorder}
       color={chipText}
       letterSpacing="0.12em"
-      fontSize="10px"
+      fontSize={{ base: isNarrow ? "8px" : "9px", md: "10px" }}
+      whiteSpace="nowrap"
+      maxW="100%"
     >
       {label}
     </Badge>
   );
 
+  // Table styles (✅ FIX utama: nowrap dimatikan saat <629px)
   const tableShellSx = {
     borderRadius: "18px",
     overflow: "hidden",
@@ -252,13 +276,15 @@ export default function MainPage() {
       "1px solid rgba(148, 163, 184, 0.25)"
     ),
     background: useColorModeValue("rgba(255,255,255,0.6)", "transparent"),
+    maxW: "100%",
   };
 
   const tableSx = {
     width: "100%",
     borderCollapse: "collapse",
-    fontSize: "12px",
+    fontSize: { base: isNarrow ? "10px" : "11px", md: "12px" },
     background: "transparent",
+    tableLayout: isNarrow ? "fixed" : "auto", // ✅ supaya kolom mengecil di mobile
   };
 
   const theadSx = {
@@ -269,23 +295,33 @@ export default function MainPage() {
   };
 
   const thSx = {
-    padding: "10px 12px",
+    padding: {
+      base: isNarrow ? "8px 6px" : "9px 10px",
+      md: "10px 12px",
+    },
     textAlign: "center",
     fontWeight: 600,
     textTransform: "uppercase" as const,
     letterSpacing: "0.06em",
-    fontSize: "11px",
+    fontSize: { base: isNarrow ? "9px" : "10px", md: "11px" },
     color: useColorModeValue("gray.700", "#e5e7eb"),
+    whiteSpace: isNarrow ? "normal" : "nowrap", // ✅ ini yang bikin gak kepotong
+    wordBreak: "break-word",
   };
 
   const tdSx = {
-    padding: "10px 12px",
+    padding: {
+      base: isNarrow ? "8px 6px" : "9px 10px",
+      md: "10px 12px",
+    },
     textAlign: "center",
     borderTop: useColorModeValue(
       "1px solid rgba(15, 23, 42, 0.10)",
       "1px solid rgba(31, 41, 55, 0.9)"
     ),
     color: useColorModeValue("gray.700", "#d1d5db"),
+    whiteSpace: isNarrow ? "normal" : "nowrap", // ✅ ini juga
+    wordBreak: "break-word",
   };
 
   const rowSx = {
@@ -306,13 +342,21 @@ export default function MainPage() {
   return (
     <Box
       minH="100%"
-      py={8}
-      px={{ base: 2, md: 6 }}
+      py={pagePY}
+      px={pagePX}
       bg={bgGradient}
       color={pageText}
+      overflowX="hidden"
+      maxW="100%"
     >
-      <Container maxW="6xl">
-        <VStack align="start" spacing={3} mb={8}>
+      <Container maxW={{ base: "100%", md: "6xl", "2xl": "7xl" }} px={0}>
+        {/* HEADER */}
+        <VStack
+          align="start"
+          spacing={{ base: 2, md: 3 }}
+          mb={{ base: 5, md: 8 }}
+          maxW="100%"
+        >
           <Badge
             px={3}
             py={1}
@@ -327,25 +371,81 @@ export default function MainPage() {
             )}
             color={useColorModeValue("gray.700", "gray.300")}
             letterSpacing="0.12em"
-            fontSize="10px"
+            fontSize={{ base: isNarrow ? "8px" : "9px", md: "10px" }}
+            maxW="100%"
+            ml={3}
+            whiteSpace="normal"
+            wordBreak="break-word"
           >
             {titleBadge}
           </Badge>
 
-          <Heading size="lg">🚦 Vehicle Detection 4 Persimpangan</Heading>
-          <Text fontSize="sm" color={softText} maxW="640px" lineHeight="1.7">
+          <Heading
+            fontSize={{
+              base: "25px",
+              sm: "26px",
+              md: "34px",
+              xl: "40px",
+              "2xl": "44px",
+            }}
+            lineHeight={{ base: "1.2", md: "1.15" }}
+            maxW={{
+              base: isNarrow ? "100%" : "100%",
+            }}
+            ml={3}
+            whiteSpace="normal"
+            wordBreak="break-word"
+          >
+            🚦 Vehicle Detection 4 Persimpangan
+          </Heading>
+
+          <Text
+            fontSize={{
+              base: isNarrow ? "14px" : "13px",
+              md: "14px",
+              xl: "15px",
+            }}
+            color={softText}
+            maxW={{
+              base: isNarrow ? "90%" : "100%",
+            }}
+            lineHeight="1.7"
+            whiteSpace="normal"
+            wordBreak="break-word"
+            ml={3}
+            textAlign="justify"
+            mt={2}
+          >
             Upload 4 gambar persimpangan, pilih model deteksi, sistem akan
             mendeteksi kendaraan, menghitung PCU, lalu menghasilkan durasi hijau
             &amp; merah berbasis fuzzy logic untuk Raspberry Pi Pico.
           </Text>
         </VStack>
 
-        <VStack align="stretch" spacing={6}>
+        <VStack
+          align="stretch"
+          spacing={sectionGap}
+          maxW={{
+            base: isNarrow ? "93%" : "100%",
+          }}
+          ml={3}
+        >
+          {/* Upload Card */}
           <Card>
-            <VStack align="stretch" spacing={4}>
-              <Box>
-                <Heading size="md">📤 Upload 4 Gambar Persimpangan</Heading>
-                <Text mt={1} fontSize="sm" color={softText}>
+            <VStack align="stretch" spacing={{ base: 3, md: 4 }} maxW="100%">
+              <Box maxW="100%">
+                <Heading
+                  fontSize={{ base: isNarrow ? "16px" : "18px", md: "20px" }}
+                  whiteSpace="normal"
+                >
+                  📤 Upload 4 Gambar Persimpangan
+                </Heading>
+                <Text
+                  mt={1}
+                  fontSize={{ base: isNarrow ? "12px" : "13px", md: "14px" }}
+                  color={softText}
+                  whiteSpace="normal"
+                >
                   Setiap file merepresentasikan 1 arah persimpangan.
                 </Text>
               </Box>
@@ -367,6 +467,7 @@ export default function MainPage() {
                   border={inputBorder}
                   borderRadius="12px"
                   color={useColorModeValue("gray.800", "gray.100")}
+                  fontSize={{ base: isNarrow ? "13px" : "14px", md: "14px" }}
                   _focus={{
                     borderColor: accent,
                     boxShadow: "0 0 0 1px rgba(99, 102, 241, 0.35)",
@@ -378,7 +479,11 @@ export default function MainPage() {
                 </Select>
               </FormControl>
 
-              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              <SimpleGrid
+                columns={{ base: 1, sm: 2 }}
+                spacing={gridGap}
+                maxW="100%"
+              >
                 {DIRS.map((dir) => (
                   <FormControl key={dir}>
                     <FormLabel
@@ -392,10 +497,11 @@ export default function MainPage() {
 
                     <Box
                       position="relative"
-                      p={3}
+                      p={{ base: isNarrow ? 2.5 : 3, md: 3 }}
                       borderRadius="12px"
                       bg={inputBg}
                       border={fileBorder}
+                      maxW="100%"
                       _hover={{
                         borderStyle: "solid",
                         borderColor: accent,
@@ -406,7 +512,15 @@ export default function MainPage() {
                         boxShadow: "0 0 0 1px rgba(99, 102, 241, 0.25)",
                       }}
                     >
-                      <Text fontSize="sm" color={softText}>
+                      <Text
+                        fontSize={{
+                          base: isNarrow ? "11px" : "12px",
+                          md: "13px",
+                        }}
+                        color={softText}
+                        whiteSpace="normal"
+                        wordBreak="break-word"
+                      >
                         {prettyFileName(files[dir])}
                       </Text>
 
@@ -427,13 +541,15 @@ export default function MainPage() {
                 ))}
               </SimpleGrid>
 
-              <HStack>
+              <VStack align="stretch" spacing={2} pt={1} maxW="100%">
                 <Button
                   onClick={onSubmit}
                   isDisabled={!canSubmit || loading}
                   borderRadius="999px"
+                  w="100%"
                   bgGradient={`radial(circle at top left, ${accent2}, ${accent})`}
                   color="white"
+                  fontSize={{ base: isNarrow ? "13px" : "14px", md: "14px" }}
                   boxShadow={useColorModeValue(
                     "0 14px 30px rgba(99, 102, 241, 0.25)",
                     "0 14px 30px rgba(99, 102, 241, 0.45)"
@@ -460,27 +576,42 @@ export default function MainPage() {
                 </Button>
 
                 {!canSubmit && (
-                  <Text fontSize="sm" color={softText}>
+                  <Text
+                    fontSize={{ base: "12px", md: "13px" }}
+                    color={softText}
+                  >
                     *Upload 4 gambar dulu
                   </Text>
                 )}
-              </HStack>
+              </VStack>
             </VStack>
           </Card>
 
           {resp && (
             <>
-              <Box>
-                <Heading size="md">
+              <Box maxW="100%">
+                <Heading
+                  fontSize={{ base: isNarrow ? "16px" : "18px", md: "20px" }}
+                  whiteSpace="normal"
+                >
                   📸 Hasil Deteksi{" "}
                   {resp.model_type ? resp.model_type.toUpperCase() : "YOLO"}
                 </Heading>
-                <Text mt={1} fontSize="sm" color={softText}>
+                <Text
+                  mt={1}
+                  fontSize={{ base: isNarrow ? "12px" : "13px", md: "14px" }}
+                  color={softText}
+                  whiteSpace="normal"
+                >
                   Visualisasi bounding box tiap arah persimpangan.
                 </Text>
               </Box>
 
-              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              <SimpleGrid
+                columns={{ base: 1, sm: 2 }}
+                spacing={gridGap}
+                maxW="100%"
+              >
                 {DIRS.map((dir) => {
                   const r = resp.results?.[dir];
                   const overlayUrl = r?.overlay_url
@@ -489,11 +620,18 @@ export default function MainPage() {
 
                   return (
                     <Card key={dir}>
-                      <VStack align="stretch" spacing={3}>
-                        <HStack justify="space-between">
+                      <VStack align="stretch" spacing={3} maxW="100%">
+                        <HStack justify="space-between" maxW="100%">
                           <Chip label={dir} />
                           {r?.error && (
-                            <Badge colorScheme="red" variant="subtle">
+                            <Badge
+                              colorScheme="red"
+                              variant="subtle"
+                              fontSize="xs"
+                              maxW="60%"
+                              whiteSpace="normal"
+                              wordBreak="break-word"
+                            >
                               {r.error}
                             </Badge>
                           )}
@@ -504,7 +642,8 @@ export default function MainPage() {
                             src={overlayUrl}
                             alt={`Deteksi ${dir}`}
                             w="100%"
-                            h="260px"
+                            maxW="100%"
+                            h={imgH}
                             objectFit="contain"
                             borderRadius="12px"
                             border={useColorModeValue(
@@ -514,7 +653,7 @@ export default function MainPage() {
                           />
                         ) : (
                           <Box
-                            h="260px"
+                            h={imgH}
                             borderRadius="12px"
                             border={useColorModeValue(
                               "1px solid rgba(15, 23, 42, 0.12)",
@@ -525,6 +664,7 @@ export default function MainPage() {
                             justifyContent="center"
                             color={softText}
                             fontSize="sm"
+                            maxW="100%"
                           >
                             Tidak ada overlay
                           </Box>
@@ -537,15 +677,26 @@ export default function MainPage() {
 
               <Divider opacity={useColorModeValue(0.35, 0.2)} />
 
-              <Box>
-                <Heading size="md">📊 Tabel PCU</Heading>
-                <Text mt={1} fontSize="sm" color={softText}>
+              <Box maxW="100%">
+                <Heading
+                  fontSize={{ base: isNarrow ? "16px" : "18px", md: "20px" }}
+                  whiteSpace="normal"
+                >
+                  📊 Tabel PCU
+                </Heading>
+                <Text
+                  mt={1}
+                  fontSize={{ base: isNarrow ? "12px" : "13px", md: "14px" }}
+                  color={softText}
+                  whiteSpace="normal"
+                >
                   Perhitungan PCU berdasarkan jumlah kendaraan.
                 </Text>
               </Box>
 
               <Card>
                 <Box sx={tableShellSx}>
+                  {/* ✅ boleh auto, tapi sekarang wrap, jadi gak kepotong */}
                   <Box overflowX="auto">
                     <Table variant="unstyled" sx={tableSx}>
                       <Thead sx={theadSx}>
@@ -579,11 +730,19 @@ export default function MainPage() {
                 </Box>
               </Card>
 
-              <Box>
-                <Heading size="md">
+              <Box maxW="100%">
+                <Heading
+                  fontSize={{ base: isNarrow ? "16px" : "18px", md: "20px" }}
+                  whiteSpace="normal"
+                >
                   ⏱ Durasi Hijau &amp; Merah (Fuzzy Logic)
                 </Heading>
-                <Text mt={1} fontSize="sm" color={softText}>
+                <Text
+                  mt={1}
+                  fontSize={{ base: isNarrow ? "12px" : "13px", md: "14px" }}
+                  color={softText}
+                  whiteSpace="normal"
+                >
                   Output timing yang akan dikirim ke Raspberry Pi Pico.
                 </Text>
               </Box>
@@ -622,7 +781,9 @@ export default function MainPage() {
                 spacing={3}
                 opacity={0.8}
                 color={softText}
-                fontSize="sm"
+                fontSize={{ base: isNarrow ? "11px" : "12px", md: "13px" }}
+                flexWrap="wrap"
+                maxW="100%"
               >
                 <Box
                   w="8px"
@@ -634,7 +795,7 @@ export default function MainPage() {
                     `0 0 16px ${accent}`
                   )}
                 />
-                <Text>
+                <Text whiteSpace="normal" wordBreak="break-word">
                   Edge-AI • Deteksi Multi-Model • Fuzzy • Raspberry Pi Pico
                 </Text>
               </HStack>

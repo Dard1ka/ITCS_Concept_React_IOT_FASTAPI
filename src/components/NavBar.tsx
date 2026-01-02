@@ -90,7 +90,6 @@ const NavBar = () => {
       rowGap={{ base: 1, md: 0 }}
       alignItems="center"
     >
-      {/* LEFT: SIGMA */}
       <GridItem rowSpan={2} alignSelf="center" minW={0}>
         <Text
           fontWeight="bold"
@@ -102,7 +101,6 @@ const NavBar = () => {
         </Text>
       </GridItem>
 
-      {/* RIGHT TOP: switch + greeting + user */}
       <GridItem justifySelf="end" minW={0}>
         <HStack
           spacing={{ base: 1.5, sm: 2.5, md: 4 }}
@@ -111,29 +109,27 @@ const NavBar = () => {
           wrap="wrap"
           maxW="100%"
         >
-          {/* jangan kepotong */}
           <Box
             flex="0 0 auto"
             transform={{
-              base: "scale(0.8)", // mobile
-              sm: "scale(0.85)", // tablet kecil
-              md: "scale(1)", // laptop ke atas
+              base: "scale(0.8)",
+              sm: "scale(0.85)",
+              md: "scale(1)",
             }}
           >
             <ColorModeSwitch />
           </Box>
 
-          {/* Greeting: width fix supaya animasi tidak menggeser elemen lain */}
           <Box
             fontWeight="semibold"
             fontSize={{
-              base: "xs", // mobile lebih kecil
+              base: "xs",
               sm: "sm",
               md: "lg",
             }}
             color={accent}
-            w={{ base: "90px", sm: "115px", md: "120px" }} // dikit lebih lebar
-            ml={{ base: 1, sm: 2, md: 0 }} // 🔥 GESER KE KANAN
+            w={{ base: "90px", sm: "115px", md: "120px" }}
+            ml={{ base: 1, sm: 2, md: 0 }}
             flex="0 0 auto"
             textAlign="right"
             whiteSpace="nowrap"
@@ -152,7 +148,6 @@ const NavBar = () => {
             />
           </Box>
 
-          {/* User: biar tidak kepotong, tapi kalau sempit akan turun baris */}
           <VStack
             spacing={0}
             align="flex-end"
@@ -181,7 +176,6 @@ const NavBar = () => {
         </HStack>
       </GridItem>
 
-      {/* RIGHT BOTTOM: Logout (tetap di kanan, tidak ikut geser greeting) */}
       <GridItem justifySelf="end" minW={0}>
         <HStack
           spacing={2}

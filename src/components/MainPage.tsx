@@ -75,7 +75,6 @@ export default function MainPage() {
   const toast = useToast();
   const { colorMode } = useColorMode();
 
-  // ✅ kunci: breakpoint khusus 629px
   const [isNarrow] = useMediaQuery("(max-width: 628px)");
 
   const [modelType, setModelType] = useState<ModelType>("yolo");
@@ -156,7 +155,6 @@ export default function MainPage() {
     }
   };
 
-  // ===== Background tetap (light/dark) =====
   const bgGradient = useColorModeValue(
     "radial-gradient(circle at top left, rgba(99,102,241,0.25) 0, transparent 55%), radial-gradient(circle at bottom right, rgba(13,148,136,0.22) 0, transparent 55%), linear-gradient(#f7fafc, #eef2ff)",
     "radial-gradient(circle at top left, #1d2345 0, transparent 55%), radial-gradient(circle at bottom right, #0f766e 0, transparent 55%), #050816"
@@ -204,8 +202,6 @@ export default function MainPage() {
     "1px dashed rgba(148, 163, 184, 0.6)"
   );
 
-  // ====== Responsive-only helpers ======
-  // ✅ kalau <629px, pad & font turun lebih agresif
   const pagePY = { base: isNarrow ? 4 : 5, md: 8, xl: 10 };
   const pagePX = { base: isNarrow ? 2 : 3, md: 6, xl: 8 };
   const cardPad = { base: isNarrow ? 3 : 4, md: 5, xl: 6 };
@@ -267,7 +263,6 @@ export default function MainPage() {
     </Badge>
   );
 
-  // Table styles (✅ FIX utama: nowrap dimatikan saat <629px)
   const tableShellSx = {
     borderRadius: "18px",
     overflow: "hidden",
@@ -284,7 +279,7 @@ export default function MainPage() {
     borderCollapse: "collapse",
     fontSize: { base: isNarrow ? "10px" : "11px", md: "12px" },
     background: "transparent",
-    tableLayout: isNarrow ? "fixed" : "auto", // ✅ supaya kolom mengecil di mobile
+    tableLayout: isNarrow ? "fixed" : "auto",
   };
 
   const theadSx = {
@@ -305,7 +300,7 @@ export default function MainPage() {
     letterSpacing: "0.06em",
     fontSize: { base: isNarrow ? "9px" : "10px", md: "11px" },
     color: useColorModeValue("gray.700", "#e5e7eb"),
-    whiteSpace: isNarrow ? "normal" : "nowrap", // ✅ ini yang bikin gak kepotong
+    whiteSpace: isNarrow ? "normal" : "nowrap",
     wordBreak: "break-word",
   };
 
@@ -320,7 +315,7 @@ export default function MainPage() {
       "1px solid rgba(31, 41, 55, 0.9)"
     ),
     color: useColorModeValue("gray.700", "#d1d5db"),
-    whiteSpace: isNarrow ? "normal" : "nowrap", // ✅ ini juga
+    whiteSpace: isNarrow ? "normal" : "nowrap",
     wordBreak: "break-word",
   };
 
@@ -350,7 +345,6 @@ export default function MainPage() {
       maxW="100%"
     >
       <Container maxW={{ base: "100%", md: "6xl", "2xl": "7xl" }} px={0}>
-        {/* HEADER */}
         <VStack
           align="start"
           spacing={{ base: 2, md: 3 }}
@@ -430,7 +424,6 @@ export default function MainPage() {
           }}
           ml={3}
         >
-          {/* Upload Card */}
           <Card>
             <VStack align="stretch" spacing={{ base: 3, md: 4 }} maxW="100%">
               <Box maxW="100%">
@@ -696,7 +689,6 @@ export default function MainPage() {
 
               <Card>
                 <Box sx={tableShellSx}>
-                  {/* ✅ boleh auto, tapi sekarang wrap, jadi gak kepotong */}
                   <Box overflowX="auto">
                     <Table variant="unstyled" sx={tableSx}>
                       <Thead sx={theadSx}>

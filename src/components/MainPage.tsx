@@ -214,6 +214,29 @@ export default function MainPage() {
     xl: "300px",
   };
 
+  // ====== Real-time static data (dummy) ======
+  const rtData = [
+    { label: "Green_North", value: 10 },
+    { label: "Green_East", value: 10 },
+    { label: "Green_South", value: 10 },
+    { label: "Green_West", value: 10 },
+
+    { label: "Red_North", value: 42 },
+    { label: "Red_East", value: 42 },
+    { label: "Red_South", value: 42 },
+    { label: "Red_West", value: 42 },
+
+    { label: "Green_RT_North", value: 0 },
+    { label: "Green_RT_East", value: 0 },
+    { label: "Green_RT_South", value: 0 },
+    { label: "Green_RT_West", value: 1 },
+
+    { label: "Red_RT_North", value: 5 },
+    { label: "Red_RT_East", value: 19 },
+    { label: "Red_RT_South", value: 33 },
+    { label: "Red_RT_West", value: 0 },
+  ];
+
   const Card = ({ children }: { children: React.ReactNode }) => (
     <Box
       w="full"
@@ -765,6 +788,66 @@ export default function MainPage() {
                       </Tbody>
                     </Table>
                   </Box>
+                </Box>
+              </Card>
+
+              {/* ===== Real-time Table (dummy) ===== */}
+              <Box maxW="100%">
+                <Heading
+                  fontSize={{ base: isNarrow ? "16px" : "18px", md: "20px" }}
+                  whiteSpace="normal"
+                >
+                  📡 Real-time Traffic (Dummy)
+                </Heading>
+                <Text
+                  mt={1}
+                  fontSize={{ base: isNarrow ? "12px" : "13px", md: "14px" }}
+                  color={softText}
+                  whiteSpace="normal"
+                >
+                  Nilai real-time untuk tiap arah (masih pakai angka static).
+                </Text>
+              </Box>
+
+              <Card>
+                <Box
+                  sx={{
+                    ...tableShellSx,
+                    p: { base: isNarrow ? 3 : 4, md: 5 },
+                  }}
+                >
+                  <SimpleGrid
+                    columns={{ base: 2, sm: 4 }}
+                    spacing={{ base: 4, md: 6 }}
+                    maxW="100%"
+                  >
+                    {rtData.map((it) => (
+                      <Box key={it.label} minW={0}>
+                        <Text
+                          fontSize={{
+                            base: isNarrow ? "11px" : "12px",
+                            md: "13px",
+                          }}
+                          color={softText}
+                          whiteSpace="nowrap"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {it.label}
+                        </Text>
+                        <Text
+                          fontSize={{
+                            base: isNarrow ? "20px" : "22px",
+                            md: "26px",
+                          }}
+                          fontWeight="semibold"
+                          lineHeight="1.1"
+                        >
+                          {it.value}
+                        </Text>
+                      </Box>
+                    ))}
+                  </SimpleGrid>
                 </Box>
               </Card>
 

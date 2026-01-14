@@ -4,3 +4,8 @@ __pycache__/
 .venv/
 static/output/*.jpg
 static/results/
+
+# Env
+.env
+.env.*
+!.env.example

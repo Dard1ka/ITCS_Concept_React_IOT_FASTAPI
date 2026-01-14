@@ -9,3 +9,6 @@ static/results/
 .env
 .env.*
 !.env.example
+
+*.pt
+*.pth

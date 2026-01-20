@@ -31,3 +31,14 @@ dist-ssr
 # Python cache (just in case)
 __pycache__/
 *.pyc
+
+# Python venv
+venv/
+.venv/
+**/venv/
+**/.venv/
+
+# Python build / compiled
+*.pyd
+*.so
+*.dll

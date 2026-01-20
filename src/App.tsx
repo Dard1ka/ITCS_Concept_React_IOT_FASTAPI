@@ -9,6 +9,11 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [registerMode, setRegisterMode] = useState(false);
 
+  const navBg = useColorModeValue("white", "#0a1b2e");
+  const navText = useColorModeValue("black", "white");
+  const mainBg = useColorModeValue("gray.100", "#091727ff");
+  const mainText = useColorModeValue("black", "whiteAlpha.900");
+
   useEffect(() => {
     const saved = localStorage.getItem("loggedIn");
     setLoggedIn(saved === "true");
@@ -30,12 +35,6 @@ function App() {
       />
     );
   }
-
-  const navBg = useColorModeValue("white", "#0a1b2e");
-  const navText = useColorModeValue("black", "white");
-
-  const mainBg = useColorModeValue("gray.100", "#091727ff");
-  const mainText = useColorModeValue("black", "whiteAlpha.900");
 
   return (
     <Grid

@@ -12,3 +12,5 @@ static/results/
 
 *.pt
 *.pth
+
+venv/

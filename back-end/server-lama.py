@@ -292,11 +292,10 @@ DEFAULT_CYCLE_1 = {
 
 _state_lock = threading.Lock()
 _current_sched = {
-    a: {"Green_time": float(DEFAULT_CYCLE_1[a]["Green_time"]), "Red_time": float(DEFAULT_CYCLE_1[a]["Red_time"])}
+    a: {"Green_time": float(LAST_FUZZY[a]["Green_time"]), "Red_time": float(LAST_FUZZY[a]["Red_time"])}
     for a in URUTAN_ARAH
 }
 _pending_sched = None  # dipakai setelah 1 siklus selesai (mirip Pico apply_pending_update)
-_current_one_shot = False  # NEW: schedule hasil deteksi hanya berlaku 1 cycle
 _cycle_t0 = time.time()
 _current_state = {
     "active_arah": "UTARA",
@@ -384,7 +383,7 @@ def _compute_red_remaining(schedule: dict, active_arah: str, phase: str, remaini
     return out
 
 def _engine_loop():
-    global _cycle_t0, _current_state, _current_sched, _pending_sched, _current_one_shot
+    global _cycle_t0, _current_state, _current_sched, _pending_sched
     while True:
         with _state_lock:
             sched = _current_sched
@@ -398,25 +397,12 @@ def _engine_loop():
                 # wrap ke siklus baru
                 _cycle_t0 = now
                 t = 0.0
-
-                # === APPLY / RESET (one-cycle validity) ===
                 if _pending_sched is not None:
-                    # ada update baru -> pakai untuk 1 cycle berikutnya
                     _current_sched = _pending_sched
                     _pending_sched = None
-                    _current_one_shot = True
-                else:
-                    # tidak ada update baru -> kalau cycle barusan pakai hasil deteksi, reset ke default
-                    if _current_one_shot:
-                        _current_sched = {
-                            a: {"Green_time": float(DEFAULT_CYCLE_1[a]["Green_time"]), "Red_time": float(DEFAULT_CYCLE_1[a]["Red_time"])}
-                            for a in URUTAN_ARAH
-                        }
-                        _current_one_shot = False
-
-                sched = _current_sched
-                tl = _build_timeline(sched)
-                total = sum(d for _, _, d in tl)
+                    sched = _current_sched
+                    tl = _build_timeline(sched)
+                    total = sum(d for _, _, d in tl)
 
             # cari segmen aktif
             acc = 0.0

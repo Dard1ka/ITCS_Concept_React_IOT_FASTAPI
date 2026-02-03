@@ -15,6 +15,7 @@ System Integration Flow :
    cd ITCS_Concept_React_IOT_FASTAPI
    ```
 BACKEND : 
+
 2) Install Dependencies:
    ```bash
    cd back-end
@@ -28,6 +29,7 @@ BACKEND :
 5) Run the local Server : http://localhost:8000
 
 FRONTEND : 
+
 6) Install Dependencies: 
    ```bash
    cd ../front-end

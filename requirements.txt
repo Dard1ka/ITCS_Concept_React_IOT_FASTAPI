@@ -1,0 +1,15 @@
+fastapi==0.115.14
+starlette==0.46.2
+uvicorn==0.38.0
+python-multipart==0.0.20
+Jinja2==3.1.6
+
+ultralytics==8.3.218
+
+torch==2.5.1+cu121
+torchvision==0.20.1+cu121
+
+opencv-python==4.10.0.84
+pillow==11.3.0
+numpy==2.2.6
+pandas==2.3.3
